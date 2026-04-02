@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Bday Aishu! 🐰💖</title>
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@400;600;700&family=Chewy&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- GLOBAL VARIABLES & RESET --- */
+        :root {
+            --bg-light-pink: #ffe6eb;
+            --bg-mid-pink: #ffb6c1;
+            --hot-pink: #ff69b4;
+            --deep-pink: #d11a6a;
+            --text-dark: #4a154b;
+            --white: #ffffff;
+            --font-fun: 'Chewy', cursive;
+            --font-name: 'Pacifico', cursive;
+            --font-sans: 'Quicksand', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body, html {
+            width: 100%;
+            background-color: var(--bg-light-pink);
+            color: var(--text-dark);
+            font-family: var(--font-sans);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* --- BACKGROUND CANVAS (Hearts) --- */
+        #floating-hearts {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 50; pointer-events: none;
+        }
+
+        /* --- FUNNY BUNNY LOGIN SCREEN --- */
+        #login-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background: linear-gradient(135deg, #ffb6c1, #ff69b4);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 2000; transition: opacity 1s ease-in-out, transform 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        #login-screen.hidden { opacity: 0; transform: translateY(-100vh) scale(0.8); pointer-events: none; }
+        
+        .bunny-container {
+            font-size: 6rem;
+            animation: hop 1.5s infinite;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.2));
+        }
+        
+        .login-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 3rem;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(209, 26, 106, 0.3);
+            text-align: center;
+            animation: pulse-border 2s infinite;
+            border: 4px dashed var(--hot-pink);
+        }
+
+        .login-box h2 {
+            font-family: var(--font-fun); font-size: 2.5rem; color: var(--deep-pink);
+            margin-bottom: 10px; letter-spacing: 2px;
+        }
+
+        .login-box p { font-weight: 600; margin-bottom: 20px; color: #ff69b4; }
+
+        .input-group { margin-bottom: 15px; }
+        .input-group input {
+            width: 100%; padding: 12px 20px; border: 2px solid #ffb6c1; border-radius: 15px;
+            font-family: var(--font-sans); font-size: 1rem; font-weight: 600;
+            outline: none; transition: all 0.3s; text-align: center;
+        }
+        .input-group input:focus { border-color: var(--deep-pink); transform: scale(1.05); }
+
+        .login-btn {
+            background: var(--deep-pink); border: none; color: white;
+            padding: 12px 40px; font-family: var(--font-fun); font-size: 1.5rem;
+            letter-spacing: 2px; cursor: pointer; border-radius: 20px;
+            transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(209, 26, 106, 0.4);
+            margin-top: 10px;
+        }
+        .login-btn:hover { background: var(--hot-pink); transform: scale(1.1) rotate(-3deg); }
+
+        /* --- MAIN SECTIONS --- */
+        #main-content { position: relative; z-index: 10; display: none; }
+        section {
+            min-height: 100vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; padding: 4rem 2rem;
+            text-align: center; position: relative;
+        }
+
+        /* --- PAGE 1: WISHES HERO SECTION --- */
+        .hero {
+            background: radial-gradient(circle, var(--white) 0%, var(--bg-light-pink) 100%);
+            overflow: hidden;
+        }
+
+        .bday-tag {
+            font-family: var(--font-sans); font-size: 1.5rem; font-weight: 700;
+            color: var(--hot-pink); margin-bottom: 1rem; letter-spacing: 3px;
+            text-transform: uppercase; animation: float-text 3s infinite ease-in-out;
+        }
+
+        .bday-girl {
+            font-family: var(--font-name); font-size: 7rem; color: var(--deep-pink);
+            line-height: 1.2; text-shadow: 4px 4px 0px #ffb6c1, 8px 8px 0px rgba(209, 26, 106, 0.2);
+            margin-bottom: 1rem; animation: heartbeat 1.5s infinite;
+        }
+
+        .bday-quote {
+            font-family: var(--font-sans); font-size: 1.5rem; font-weight: 600;
+            color: var(--text-dark); margin: 2rem auto;
+            border: 3px dashed var(--hot-pink); border-radius: 20px;
+            padding: 25px 40px; width: 90%; max-width: 600px;
+            background: var(--white); box-shadow: 0 10px 20px rgba(255, 105, 180, 0.2);
+            animation: wiggle 4s infinite;
+            position: relative;
+        }
+        .bday-quote::before, .bday-quote::after {
+            content: '✨'; position: absolute; font-size: 2rem;
+        }
+        .bday-quote::before { top: -15px; left: -15px; animation: spin 4s infinite linear; }
+        .bday-quote::after { bottom: -15px; right: -15px; animation: spin-reverse 4s infinite linear; }
+
+        /* --- PAGE 2: FUNNY TRAITS / MEMORIES --- */
+        #traits {
+            background-color: var(--bg-mid-pink);
+            background-image: radial-gradient(#ff69b4 2px, transparent 2px);
+            background-size: 30px 30px;
+        }
+        .section-title { 
+            font-family: var(--font-fun); font-size: 4rem; color: var(--white); 
+            text-shadow: 3px 3px 0 var(--deep-pink); margin-bottom: 3rem;
+            animation: bounce-title 2s infinite;
+        }
+        .traits-grid { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 2rem; width: 100%; max-width: 1000px; 
+        }
+        .trait-card {
+            background: var(--white); border: 5px solid var(--deep-pink);
+            padding: 2.5rem 1.5rem; border-radius: 30px; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 0 var(--deep-pink); position: relative;
+        }
+        .trait-card:hover { transform: translateY(-15px) scale(1.05); box-shadow: 0 25px 0 var(--deep-pink); }
+        .trait-emoji { font-size: 4rem; margin-bottom: 10px; display: block; animation: float-text 2s infinite; }
+        .trait-card h3 { font-family: var(--font-fun); font-size: 2.2rem; color: var(--hot-pink); margin-bottom: 0.5rem; }
+        .trait-card p { font-size: 1.1rem; font-weight: 600; color: var(--text-dark); line-height: 1.5; }
+
+        /* --- PAGE 3: VIRTUAL PARTY & CAKE --- */
+        #party-time { background: linear-gradient(to bottom, #ffb6c1, #ffe6eb); min-height: 80vh; }
+        .cake-container {
+            font-size: 10rem; cursor: pointer; transition: transform 0.2s;
+            animation: float 4s infinite;
+            filter: drop-shadow(0 20px 20px rgba(209, 26, 106, 0.3));
+        }
+        .cake-container:hover { transform: scale(1.2) rotate(5deg); }
+        .party-text {
+            font-family: var(--font-sans); font-size: 1.3rem; font-weight: 700;
+            color: var(--deep-pink); margin-top: 2rem; max-width: 600px;
+        }
+        .gift-btn {
+            margin-top: 3rem; background: #fff; border: 4px solid var(--deep-pink); color: var(--deep-pink);
+            padding: 15px 40px; font-family: var(--font-fun); font-size: 2rem;
+            border-radius: 50px; cursor: pointer; transition: all 0.3s;
+            box-shadow: 0 8px 0 var(--deep-pink);
+        }
+        .gift-btn:hover { background: var(--deep-pink); color: #fff; transform: translateY(5px); box-shadow: 0 3px 0 var(--text-dark); }
+        .gift-btn:active { transform: translateY(8px); box-shadow: 0 0 0 var(--text-dark); }
+
+        /* --- ANIMATIONS --- */
+        @keyframes hop { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
+        @keyframes pulse-border { 0%, 100% { border-color: var(--hot-pink); } 50% { border-color: var(--deep-pink); } }
+        @keyframes heartbeat { 0%, 100% { transform: scale(1); } 10%, 30% { transform: scale(1.1); } 20% { transform: scale(1.2); } }
+        @keyframes float-text { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes wiggle { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-2deg); } 75% { transform: rotate(2deg); } }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes spin-reverse { 100% { transform: rotate(-360deg); } }
+        @keyframes bounce-title { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        
+        .reveal { opacity: 0; transform: translateY(60px) scale(0.9); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1.5); }
+        .reveal.active { opacity: 1; transform: translateY(0) scale(1); }
+
+        @media (max-width: 768px) {
+            .bday-girl { font-size: 4.5rem; }
+            .section-title { font-size: 3rem; }
+            .login-box { padding: 2rem; width: 90%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Canvas for floating hearts -->
+    <canvas id="floating-hearts"></canvas>
+
+    <!-- Funny Bunny Login Screen -->
+    <div id="login-screen">
+        <div class="bunny-container">🐰</div>
+        <div class="login-box">
+            <h2>BFF Vault Login</h2>
+            <p>Authorized Besties Only!</p>
+            <div class="input-group">
+                <input type="text" id="userid" placeholder="ID (Hint: Ayeshu)">
+            </div>
+            <div class="input-group">
+                <input type="password" id="passid" placeholder="Pass (Hint: bestie)">
+            </div>
+            <button class="login-btn" onclick="checkLogin()">Let Me In!</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content">
+        
+        <!-- Page 1: Happy Bday Wishes -->
+        <section class="hero">
+            <div class="reveal hero-content">
+                <div class="bday-tag">✨ Leveling up today! ✨</div>
+                <h1 class="bday-girl">Happy Bday<br>Ayeshu!</h1>
+                
+                <div class="bday-quote">
+                    "Friends are the family we choose... <br>
+                    <span style="color: var(--hot-pink); font-size: 1.2rem; display: block; margin-top: 10px;">
+                        And honestly, I'm just glad I'm stuck with you. Have the happiest birthday, crazy girl! 💖
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Page 2: Funny Memories / Traits -->
+        <section id="traits">
+            <h2 class="section-title reveal">Why You're Awesome 👑</h2>
+            <div class="traits-grid">
+                
+                <div class="trait-card reveal" style="transition-delay: 0.1s;">
+                    <span class="trait-emoji">🍕</span>
+                    <h3>Snack Thief</h3>
+                    <p>Will strictly say "I'm not hungry" and then proceed to eat half of my fries. Unbelievable.</p>
+                </div>
+                
+                <div class="trait-card reveal" style="transition-delay: 0.3s;">
+                    <span class="trait-emoji">📸</span>
+                    <h3>Selfie Queen</h3>
+                    <p>Takes 100 photos, hates 99 of them, uploads the blurry one because "it's an aesthetic."</p>
+                </div>
+
+                <div class="trait-card reveal" style="transition-delay: 0.5s;">
+                    <span class="trait-emoji">💃</span>
+                    <h3>Vibe Matcher</h3>
+                    <p>The only person who will match my insane energy at 2 AM for absolutely no reason.</p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Page 3: Virtual Party & Cake -->
+        <section id="party-time">
+            <h2 class="section-title reveal" style="color: var(--deep-pink); text-shadow: 2px 2px #fff;">Make a Wish! 🎂</h2>
+            
+            <div class="reveal" style="text-align: center;">
+                <div class="cake-container" onclick="blowCandle(this)">
+                    🎂
+                </div>
+                <p class="party-text">
+                    (Click the cake to blow out the virtual candles!)
+                </p>
+                <p class="party-text" style="font-size: 1.1rem; color: var(--hot-pink);">
+                    May all your wishes come true Aishu. Keep smiling, keep shining, and keep being the amazing bestie you are! 
+                </p>
+
+                <button class="gift-btn reveal" onclick="openGift()">🎁 Open Gift</button>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        /* --- BUNNY LOGIN LOGIC --- */
+        function checkLogin() {
+            const user = document.getElementById('userid').value.toLowerCase().trim();
+            const pass = document.getElementById('passid').value.toLowerCase().trim();
+            
+            // Just for fun, if they mess up, give them a funny alert, but let them in anyway if they type the hint, 
+            // or just force them to type Aishu and bestie.
+            if(user === 'aishu' && pass === 'bestie') {
+                grantAccess();
+            } else if (user === '' || pass === '') {
+                alert("🐰 Silly goose! Don't leave it blank! Check the hints.");
+            } else {
+                alert("🐰 Hmm... Incorrect! But since it's your birthday, I'll let you in anyway! 🎉");
+                grantAccess();
+            }
+        }
+
+        function grantAccess() {
+            const screen = document.getElementById('login-screen');
+            screen.classList.add('hidden');
+            setTimeout(() => { 
+                screen.style.display = 'none'; 
+                document.getElementById('main-content').style.display = 'block'; 
+                triggerReveals(); 
+            }, 1000);
+        }
+
+        /* --- CAKE INTERACTION --- */
+        function blowCandle(elem) {
+            elem.innerHTML = "🧁"; // changes cake to cupcake
+            elem.style.transform = "scale(1.3) rotate(360deg)";
+            setTimeout(() => {
+                alert("Yay! Candles blown! 🥳 Wish saved in the BFF vault.");
+            }, 500);
+        }
+
+        /* --- GIFT BUTTON --- */
+        function openGift() {
+            alert("🎁 Error 404: Real gift not found! 🤣 Just kidding, party is on me! Let's celebrate soon!");
+        }
+
+        /* --- PARTICLES (Floating Hearts) --- */
+        const canvas = document.getElementById('floating-hearts'); 
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas); resizeCanvas();
+        
+        class Heart {
+            constructor() {
+                this.x = Math.random() * canvas.width; 
+                this.y = canvas.height + Math.random() * 100;
+                this.size = Math.random() * 15 + 10; 
+                this.speedY = Math.random() * 2 + 1;
+                this.speedX = (Math.random() - 0.5) * 1;
+                this.opacity = Math.random() * 0.5 + 0.3; 
+                this.color = Math.random() > 0.5 ? '#ff69b4' : '#ffb6c1';
+            }
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX;
+                if(this.y < -50) { 
+                    this.y = canvas.height + 50; 
+                    this.x = Math.random() * canvas.width; 
+                }
+            }
+            draw() { 
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.translate(this.x, this.y);
+                // Draw a simple heart shape
+                ctx.beginPath();
+                ctx.moveTo(0, this.size / 4);
+                ctx.quadraticCurveTo(0, 0, this.size / 4, 0);
+                ctx.quadraticCurveTo(this.size / 2, 0, this.size / 2, this.size / 4);
+                ctx.quadraticCurveTo(this.size / 2, 0, this.size * 3/4, 0);
+                ctx.quadraticCurveTo(this.size, 0, this.size, this.size / 4);
+                ctx.quadraticCurveTo(this.size, this.size / 2, this.size / 2, this.size * 3/4);
+                ctx.moveTo(0, this.size / 4);
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+        function initParticles() { for(let i=0; i<30; i++) particles.push(new Heart()); }
+        function animateParticles() { 
+            ctx.clearRect(0, 0, canvas.width, canvas.height); 
+            particles.forEach(p=>{p.update(); p.draw();}); 
+            requestAnimationFrame(animateParticles); 
+        }
+        initParticles(); animateParticles();
+
+        /* --- SCROLL REVEAL --- */
+        function triggerReveals() {
+            const reveals = document.querySelectorAll('.reveal');
+            reveals.forEach(reveal => {
+                if(reveal.getBoundingClientRect().top < window.innerHeight - 50) {
+                    reveal.classList.add('active');
+                }
+            });
+        }
+        window.addEventListener('scroll', triggerReveals);
+    </script>
+</body>
+</html>
